@@ -3,8 +3,8 @@ from cereal import car
 from selfdrive.config import Conversions as CV
 from selfdrive.controls.lib.drive_helpers import create_event, EventTypes as ET
 from selfdrive.controls.lib.vehicle_model import VehicleModel
-from selfdrive.car.subaru.values import CAR
-from selfdrive.car.subaru.carstate import CarState, get_powertrain_can_parser, get_camera_can_parser
+from selfdrive.car.mercedes.values import CAR
+from selfdrive.car.mercedes.carstate import CarState, get_powertrain_can_parser, get_camera_can_parser
 from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness
 
 ButtonType = car.CarState.ButtonEvent.Type
@@ -41,12 +41,12 @@ class CarInterface(object):
   def get_params(candidate, fingerprint, vin="", is_panda_black=False):
     ret = car.CarParams.new_message()
 
-    ret.carName = "subaru"
+    ret.carName = "mercedes"
     ret.radarOffCan = True
     ret.carFingerprint = candidate
     ret.carVin = vin
     ret.isPandaBlack = is_panda_black
-    ret.safetyModel = car.CarParams.SafetyModel.subaru
+    ret.safetyModel = car.CarParams.SafetyModel.mercedes
 
     ret.enableCruise = True
     ret.steerLimitAlert = True
@@ -55,7 +55,7 @@ class CarInterface(object):
 
     ret.steerRateCost = 0.7
 
-    if candidate in [CAR.IMPREZA]:
+    if candidate in [CAR.E350]:
       ret.mass = 1568. + STD_CARGO_KG
       ret.wheelbase = 2.67
       ret.centerToFront = ret.wheelbase * 0.5

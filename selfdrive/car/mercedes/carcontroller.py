@@ -1,7 +1,7 @@
 #from common.numpy_fast import clip
 from selfdrive.car import apply_std_steer_torque_limits
-from selfdrive.car.subaru import subarucan
-from selfdrive.car.subaru.values import CAR, DBC
+from selfdrive.car.mercedes import mercedescan
+from selfdrive.car.mercedes.values import CAR, DBC
 from selfdrive.can.packer import CANPacker
 
 
@@ -11,7 +11,7 @@ class CarControllerParams():
     self.STEER_STEP = 2                # how often we update the steer cmd
     self.STEER_DELTA_UP = 50           # torque increase per refresh, 0.8s to max
     self.STEER_DELTA_DOWN = 70         # torque decrease per refresh
-    if car_fingerprint == CAR.IMPREZA:
+    if car_fingerprint == CAR.E350:
       self.STEER_DRIVER_ALLOWANCE = 60   # allowed driver torque before start limiting
       self.STEER_DRIVER_MULTIPLIER = 10   # weight driver torque heavily
       self.STEER_DRIVER_FACTOR = 1     # from dbc
