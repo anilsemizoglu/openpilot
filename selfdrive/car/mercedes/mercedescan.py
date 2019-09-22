@@ -1,4 +1,4 @@
-import copy
+subaru_checksumimport copy
 from cereal import car
 from selfdrive.car.mercedes.values import CAR
 
@@ -8,6 +8,7 @@ def subaru_checksum(packer, values, addr):
   dat = packer.make_can_msg(addr, 0, values)[2]
   dat = [ord(i) for i in dat]
   return (sum(dat[1:]) + (addr >> 8) + addr) & 0xff
+
 
 def create_steering_control(packer, car_fingerprint, apply_steer, frame, steer_step):
 
@@ -52,6 +53,6 @@ def create_es_lkas(packer, es_lkas_msg, visual_alert, left_line, right_line):
   values["LKAS_Left_Line_Visible"] = int(left_line)
   values["LKAS_Right_Line_Visible"] = int(right_line)
 
-  values["Checksum"] = subaru_checksum(packer, values, 802)
+  values["Checksum"] = merc_checksum(packer, values, 802)
 
   return packer.make_can_msg("ES_LKAS_State", 0, values)
