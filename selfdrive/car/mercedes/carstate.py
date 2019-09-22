@@ -4,6 +4,19 @@ from selfdrive.config import Conversions as CV
 from selfdrive.can.parser import CANParser
 from selfdrive.car.mercedes.values import DBC, STEER_THRESHOLD
 
+# taken from QUILL
+def parse_gear_shifter(can_gear):
+  if can_gear == 0x8:
+    return "park"
+  elif can_gear == 0x7:
+    return "reverse"
+  elif can_gear == 0x6:
+    return "neutral"
+  elif can_gear == 0x5:
+    return "drive"
+
+  return "unknown"
+
 def get_powertrain_can_parser(CP):
   # this function generates lists for signal, messages and initial values
   signals = [
@@ -39,47 +52,36 @@ def get_powertrain_can_parser(CP):
 
   return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)
 
-
-def get_camera_can_parser(CP):
+# taken from QUILL
+def get_can_parser(CP):
   signals = [
-    ("Cruise_Set_Speed", "ES_DashStatus", 0),
-
-    ("Counter", "ES_Distance", 0),
-    ("Signal1", "ES_Distance", 0),
-    ("Signal2", "ES_Distance", 0),
-    ("Main", "ES_Distance", 0),
-    ("Signal3", "ES_Distance", 0),
-
-    ("Checksum", "ES_LKAS_State", 0),
-    ("Counter", "ES_LKAS_State", 0),
-    ("Keep_Hands_On_Wheel", "ES_LKAS_State", 0),
-    ("Empty_Box", "ES_LKAS_State", 0),
-    ("Signal1", "ES_LKAS_State", 0),
-    ("LKAS_ACTIVE", "ES_LKAS_State", 0),
-    ("Signal2", "ES_LKAS_State", 0),
-    ("Backward_Speed_Limit_Menu", "ES_LKAS_State", 0),
-    ("LKAS_ENABLE_3", "ES_LKAS_State", 0),
-    ("Signal3", "ES_LKAS_State", 0),
-    ("LKAS_ENABLE_2", "ES_LKAS_State", 0),
-    ("Signal4", "ES_LKAS_State", 0),
-    ("LKAS_Left_Line_Visible", "ES_LKAS_State", 0),
-    ("Signal6", "ES_LKAS_State", 0),
-    ("LKAS_Right_Line_Visible", "ES_LKAS_State", 0),
-    ("Signal7", "ES_LKAS_State", 0),
-    ("FCW_Cont_Beep", "ES_LKAS_State", 0),
-    ("FCW_Repeated_Beep", "ES_LKAS_State", 0),
-    ("Throttle_Management_Activated", "ES_LKAS_State", 0),
-    ("Traffic_light_Ahead", "ES_LKAS_State", 0),
-    ("Right_Depart", "ES_LKAS_State", 0),
-    ("Signal5", "ES_LKAS_State", 0),
-
+    # sig_name, sig_address, default
+    ("GEAR", "GEAR_PACKET", 0),
+    ("DRIVER_BRAKE", "BRAKE_MODULE", 0),
+    ("BRAKE_POSITION", "BRAKE_MODULE", 0),
+    ("COMBINED_GAS", "GAS_PEDAL", 0),
+    ("GAS_PEDAL", "GAS_PEDAL", 0),
+    ("WHEEL_SPEED_FL", "WHEEL_SPEEDS", 0),
+    ("WHEEL_SPEED_FR", "WHEEL_SPEEDS", 0),
+    ("WHEEL_SPEED_RL", "WHEEL_SPEEDS", 0),
+    ("WHEEL_SPEED_RR", "WHEEL_SPEEDS", 0),
+    ("DOOR_OPEN_FL", "DOOR_SENSORS", 1),
+    ("DOOR_OPEN_FR", "DOOR_SENSORS", 1),
+    ("DOOR_OPEN_RL", "DOOR_SENSORS", 1),
+    ("DOOR_OPEN_RR", "DOOR_SENSORS", 1),
+    ("SEATBELT_DRIVER_LATCHED", "SEATBELT_SENSORS", 1),
+    ("STEER_ANGLE", "STEER_SENSOR", 0),
+    ("STEER_RATE", "STEER_SENSOR", 0),
+    ("CRUISE_DISABLED", "CRUISE_CONTROL3", 0),
+    ("CRUISE_SET_SPEED", "CRUISE_CONTROL3", 0),
+    ("LEFT_BLINKER", "DRIVER_CONTROLS", 0),
+    ("RIGHT_BLINKER", "DRIVER_CONTROLS", 0),
+    ("HIGHBEAM_TOGGLE", "DRIVER_CONTROLS", 0),
   ]
 
-  checks = [
-    ("ES_DashStatus", 10),
-  ]
+  checks = []
 
-  return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 2)
+  return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)
 
 
 class CarState(object):

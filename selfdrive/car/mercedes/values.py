@@ -3,6 +3,8 @@ from selfdrive.car import dbc_dict
 class CAR:
    E350= "Mercedes-Benz E350 2011"
 
+STATIC_MSGS = []
+
 FINGERPRINTS = {
   CAR.E350: [{
 
